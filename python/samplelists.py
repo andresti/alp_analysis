@@ -111,6 +111,9 @@ samlists = {
    'qcd_m' : [ 'QCD_HT200to300_m', 'QCD_HT300to500_m', 'QCD_HT500to700_m', 'QCD_HT700to1000_m',
                'QCD_HT1000to1500_m', 'QCD_HT1500to2000_m', 'QCD_HT2000toInf_m' ],
 
+   'qcd_notrg' : [ 'QCD_HT200to300_notrg', 'QCD_HT300to500_notrg', 'QCD_HT500to700_notrg', 'QCD_HT700to1000_notrg',
+               'QCD_HT1000to1500_notrg', 'QCD_HT1500to2000_notrg', 'QCD_HT2000toInf_notrg' ],
+
    'qcd_m500' : [ 'QCD_HT500to700_m', 'QCD_HT700to1000_m',
                'QCD_HT1000to1500_m', 'QCD_HT1500to2000_m', 'QCD_HT2000toInf_m' ],
 

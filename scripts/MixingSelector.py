@@ -123,7 +123,7 @@ for sname in snames:
         print "WARNING: files do not exist"
         continue
 
-    if "Run" in files[0]: config["isData"] = True 
+    if "Run" in files[0] or "QCD" in files[0]: config["isData"] = True 
 
     json_str = json.dumps(config)
 

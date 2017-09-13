@@ -223,7 +223,7 @@ for sname in snames:
     if args.savePlots: selector.addOperator(JetPlotterOperator(alp.Event)(btagAlgo, weights_v))        
     if args.savePlots: selector.addOperator(DiJetPlotterOperator(alp.Event)(weights_v))
     selector.addOperator(EventWriterOperator(alp.Event)(json_str, weights_v))
-    if not args.doMixed:
+    if True: #not args.doMixed:
         selector.addOperator(ThrustFinderOperator(alp.Event)())
         selector.addOperator(HemisphereProducerOperator(alp.Event)())
         selector.addOperator(HemisphereWriterOperator(alp.Event)())
