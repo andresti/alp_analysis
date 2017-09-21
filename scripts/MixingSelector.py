@@ -76,8 +76,11 @@ elif args.btag == 'csv':
     btagAlgo  = "pfCombinedInclusiveSecondaryVertexV2BJetTags"
     btag_wp = wps['CSVv2_moriond']
 
+btag_minwp = btag_wp[0] #debug
+btag_maxwp = btag_wp[1] #debug
+
 # variables to check nearest-neightbour
-nn_vars = ["thrustMayor","thrustMinor","invMass","sumPz","ht"] #"pt1Btag","pt2Btag","pt3Btag","pt4Btag",
+nn_vars = ["thrustMayor","thrustMinor","invMass","sumPz"] #"pt1Btag","pt2Btag","pt3Btag","pt4Btag", ,"ht"
 nn_vars_v = vector("string")()
 for v in nn_vars: nn_vars_v.push_back(v)
 
@@ -127,9 +130,22 @@ for sname in snames:
 
     json_str = json.dumps(config)
 
+  #DEBUG - hard coded expression to get hems from fixed library
+    reg_exp2 = "/lustre/cmswork/hh/alp_moriond_base/btags_2med_2loose_filtered//BTagCSVRun2016.root"
+    #reg_exp2 = iDir+"/"+sname+".root"
+    print "reg_exp2: {}".format(reg_exp2) 
+    files2 = glob(reg_exp2)
+    files2 = files
+
+    #preliminary checks
+    if not files2: 
+        print "WARNING: files do not exist"
+        continue
+
+
     #get hem_tree for mixing
     tch_hem = TChain("pair/hem_tree")    
-    for f in files: 
+    for f in files2: 
         tch_hem.Add(f)
 
     print tch_hem.GetEntries()
@@ -138,7 +154,8 @@ for sname in snames:
     selector = ComposableSelector(alp.Event)(0, json_str)
     selector.addOperator(ThrustFinderOperator(alp.Event)())
     selector.addOperator(HemisphereProducerOperator(alp.Event)())
-    selector.addOperator(HemisphereMixerOperator(alp.Event)(tch_hem, btagAlgo, btag_wp[1], nn_vars_v, 11)) #WARNING!! 
+    #selector.addOperator(HemisphereMixerOperator(alp.Event)(tch_hem, btagAlgo, btag_minwp, btag_maxwp, nn_vars_v, 11)) #WARNING!! 
+    selector.addOperator(HemisphereMixerOperator(alp.Event)(tch_hem, btagAlgo, btag_minwp, 99, nn_vars_v, 11)) #WARNING!! 
     selector.addOperator(MixedEventWriterOperator(alp.Event)(btagAlgo, btag_wp[1], mixing_comb))
 
     #create tChain and process each files   

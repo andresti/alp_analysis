@@ -20,6 +20,8 @@ namespace alp {
       double dist_ = -99.;
       static constexpr const char* disc_ = "pfCombinedMVAV2BJetTags";; 
       static constexpr float disc_wp_  = 0.4432;
+      static constexpr float disc_minwp_  = 0.4432;
+      static constexpr float disc_maxwp_  = 100000;
   
       Hemisphere() {}
       Hemisphere(double p_phi, bool d_phi_inv, double dist = -99. ) : 
@@ -67,10 +69,10 @@ namespace alp {
   
       static int NTags(const Hemisphere & hem,
                        std::string disc,
-                       float wp) {
+                       float minwp, float maxwp=100000.) {
         int nTags = 0;
         for (const auto & j : hem.jets_) {
-          if (j.disc(disc) > wp) nTags++;
+          if (minwp < j.disc(disc) && j.disc(disc) < maxwp) nTags++;
         }
         return nTags;
       }
@@ -145,6 +147,7 @@ namespace alp {
                            float wp) {
         double ht = 0.;
         for (const auto & j : hem.jets_) {
+          
           if (j.disc(disc) > wp){
             ht += j.p4_.Pt();
           }
@@ -186,8 +189,8 @@ namespace alp {
       }
 
       //default values to call function directly in branches -- WARNING
-      int nTags(std::string disc = disc_, float wp = disc_wp_) const {
-        return NTags(*this,disc,wp);
+      int nTags(std::string disc = disc_, float minwp = disc_minwp_, float maxwp = disc_maxwp_) const {
+        return NTags(*this,disc,minwp,maxwp);
       }
 
       double minPtBtag(std::string disc = disc_, float wp = disc_wp_) const {

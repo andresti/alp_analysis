@@ -66,7 +66,7 @@ elif args.btag == 'csv':
 weights        = {}
 weights_nobTag = {} 
 if not args.doMixed:
-    weights        = {'PUWeight', 'BTagWeight''PdfWeight'}
+    weights        = {'PUWeight', 'BTagWeight','PdfWeight'}
     weights_nobTag = {'PUWeight','PdfWeight'}
 # ---------------
 
@@ -86,14 +86,14 @@ for w in weights_nobTag: w_nobTag_v.push_back(w)
 
 # to parse variables to the anlyzer
 if args.doMixed: config = { "jets_branch_name": "Jets",
-                            "fhems_branch_name": "Hems",
-                            "orhems_branch_name": "OrHems",
+                        #    "fhems_branch_name": "Hems",
+                        #    "orhems_branch_name": "OrHems",
                           }
 else: config = { "eventInfo_branch_name" : "EventInfo",
               "jets_branch_name": "Jets",
               "genbfromhs_branch_name" : "GenBFromHs",
               "genhs_branch_name" : "GenHs",
-              "tl_genbfromhs_branch_name" : "TL_GenBFromHs",
+             # "tl_genbfromhs_branch_name" : "TL_GenBFromHs",
               "tl_genhs_branch_name" : "TL_GenHs",
             }
 #"muons_branch_name" : "",
@@ -203,7 +203,7 @@ for sname in snames:
     #selector.addOperator(GenJetPlotterOperator(alp.Event)(btagAlgo))
 
     selector.addOperator(FolderOperator(alp.Event)("btag"))
-    selector.addOperator(BTagFilterOperator(alp.Event)(btagAlgo, btag_wp[1], 4, 99, config["isData"], data_path)) #99=noAntitag  3 99
+    selector.addOperator(BTagFilterOperator(alp.Event)(btagAlgo, btag_wp[0], 4, 99, config["isData"], data_path)) #99=noAntitag  3 99
     selector.addOperator(CounterOperator(alp.Event)(config["n_gen_events"], weights_v))
     #selector.addOperator(JetPlotterOperator(alp.Event)(btagAlgo, weights_v))        
     #selector.addOperator(GenJetPlotterOperator(alp.Event)(btagAlgo))
@@ -223,11 +223,11 @@ for sname in snames:
     if args.savePlots: selector.addOperator(JetPlotterOperator(alp.Event)(btagAlgo, weights_v))        
     if args.savePlots: selector.addOperator(DiJetPlotterOperator(alp.Event)(weights_v))
     selector.addOperator(EventWriterOperator(alp.Event)(json_str, weights_v))
+
     if True: #not args.doMixed:
         selector.addOperator(ThrustFinderOperator(alp.Event)())
         selector.addOperator(HemisphereProducerOperator(alp.Event)())
         selector.addOperator(HemisphereWriterOperator(alp.Event)())
-
     #create tChain and process each files
     if args.doMixed: treename = "mix_tree"
     else: treename = "ntuple/tree"
